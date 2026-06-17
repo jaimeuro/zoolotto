@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZooLotto - Suite de Pronósticos</title>
+    <link rel="shortcut icon" href="img_activo/animalitos.png" type="image/x-icon">
+    <style>
+        body {
+            background-color: #0d131a;
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        header {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #fca311;
+            text-shadow: 0 0 10px rgba(252, 163, 17, 0.3);
+        }
+
+        .btn-acceso {
+            border: 2px solid #4caf50;
+            color: #4caf50;
+            background: transparent;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .btn-acceso:hover {
+            background-color: #4caf50;
+            color: #0d131a;
+        }
+
+        /* Estilo para el botón de cerrar sesión */
+        .btn-cerrar {
+            border: 2px solid #f44336;
+            color: #f44336;
+            background: transparent;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+            display: none; /* Oculto por defecto */
+        }
+
+        .btn-cerrar:hover {
+            background-color: #f44336;
+            color: #0d131a;
+        }
+
+        h1.main-title {
+            margin-top: 40px;
+            font-size: 24px;
+            color: #8ab4f8;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            width: 90%;
+            max-width: 1100px;
+            margin-top: 40px;
+            padding-bottom: 50px;
+        }
+
+        .card {
+            background-color: #161f2b;
+            border: 1px solid #243346;
+            border-radius: 18px;
+            padding: 40px 20px;
+            text-align: center;
+            text-decoration: none;
+            color: #ffffff;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+            transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: #fca311;
+            box-shadow: 0 12px 24px rgba(252, 163, 17, 0.15);
+        }
+
+        .card img {
+            width: 90px;
+            height: 90px;
+            margin-bottom: 25px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 3px solid #243346;
+            background-color: #0d131a;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .card:hover img {
+            border-color: #fca311;
+            box-shadow: 0 0 15px rgba(252, 163, 17, 0.4);
+        }
+
+        .card h2 {
+            margin: 0;
+            font-size: 22px;
+            color: #ffffff;
+            letter-spacing: 1px;
+        }
+
+        .card p {
+            color: #8ab4f8;
+            font-size: 14px;
+            margin-top: 10px;
+            margin-bottom: 0;
+        }
+
+        .card.bloqueado {
+            pointer-events: none;
+            opacity: 0.2;
+            filter: grayscale(1);
+        }
+
+        .card.bloqueado::after {
+            content: "🔒 Bloqueado";
+            position: absolute;
+            background: rgba(13, 19, 26, 0.9);
+            border: 1px solid #fca311;
+            padding: 8px 15px;
+            border-radius: 20px;
+            color: #fca311;
+            font-size: 14px;
+            font-weight: bold;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            filter: none;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">ZOOLOTTO</div>
+        <div>
+            <button id="btn-login" class="btn-acceso" onclick="solicitarClave()">CLAVE DE ACCESO</button>
+            <button id="btn-logout" class="btn-cerrar" onclick="cerrarSesion()">CERRAR SESIÓN</button>
+        </div>
+    </header>
+
+    <h1 class="main-title">Seleccione un Generador</h1>
+
+    <div class="grid-container">
+        <a href="activo.html" class="card" id="tarjeta-activo">
+            <img src="logo_activo.png" alt="Lotto Activo" onerror="this.src='https://via.placeholder.com/90/161f2b/fca311?text=LA'">
+            <h2>LOTTO ACTIVO</h2>
+            <p>Pronósticos y Tripletas</p>
+        </a>
+
+        <a href="granjita.html" class="card" id="tarjeta-granjita">
+            <img src="logo_granjita.png" alt="La Granjita" onerror="this.src='https://via.placeholder.com/90/161f2b/fca311?text=LG'">
+            <h2>LA GRANJITA</h2>
+            <p>Pronósticos y Tripletas</p>
+        </a>
+
+        <a href="guacharo.html" class="card" id="tarjeta-guacharo">
+            <img src="logo_guacharo.png" alt="Guacharo Activo" onerror="this.src='https://via.placeholder.com/90/161f2b/fca311?text=GA'">
+            <h2>GUACHARO ACTIVO</h2>
+            <p>Pronósticos y Tripletas</p>
+        </a>
+    </div>
+
+    <script>
+        // --- CONFIGURACIÓN DE TU BASE DE DATOS ---
+        const SUPABASE_URL = "https://prpvcnhwtrijakbzbkrx.supabase.co";
+        const SUPABASE_ANON_KEY = "sb_publishable_7iBD0FLj85nK7llPcqQTWA_UCDi0qkc";
+
+        // Función que se ejecuta automáticamente cuando la página se carga
+        window.onload = function() {
+            // Buscamos si ya guardamos los permisos del usuario anteriormente en esta pestaña
+            const permisosGuardados = sessionStorage.getItem('zoolotto_permisos');
+
+            if (permisosGuardados) {
+                // Si existen, los convertimos de texto a lista y los aplicamos
+                const listaPermisos = permisosGuardados.split(',');
+                aplicarPermisos(listaPermisos);
+                
+                // Cambiamos el botón superior para mostrar "Cerrar Sesión"
+                document.getElementById("btn-login").style.display = "none";
+                document.getElementById("btn-logout").style.display = "inline-block";
+            } else {
+                // Si no hay sesión iniciada, bloqueamos todo de forma predeterminada
+                bloquearTodo();
+            }
+        };
+
+        async function solicitarClave() {
+            const respuesta = prompt("Por favor, ingrese su clave de acceso para activar los módulos:");
+            if (respuesta === null) return;
+
+            const claveIngresada = respuesta.trim().toLowerCase();
+            if (claveIngresada === "") return;
+
+            try {
+                const urlConsulta = `${SUPABASE_URL}/rest/v1/accesos_clientes?clave=eq.${claveIngresada}&select=permisos`;
+                
+                const response = await fetch(urlConsulta, {
+                    method: 'GET',
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data && data.length > 0) {
+                    const textoPermisos = data[0].permisos;
+                    
+                    // --- NUEVO: Guardamos el texto de permisos en la sesión del navegador ---
+                    sessionStorage.setItem('zoolotto_permisos', textoPermisos);
+
+                    const accesosPermitidos = textoPermisos.split(',').map(p => p.trim());
+
+                    alert("¡Clave válida! Módulos autorizados activados.");
+                    aplicarPermisos(accesosPermitidos);
+
+                    // Cambiamos visualmente el botón a "Cerrar Sesión"
+                    document.getElementById("btn-login").style.display = "none";
+                    document.getElementById("btn-logout").style.display = "inline-block";
+                } else {
+                    alert("Clave incorrecta, vencida o inexistente. Se mantendrán los bloqueos.");
+                    bloquearTodo();
+                }
+
+            } catch (error) {
+                console.error("Error al conectar con Supabase:", error);
+                alert("Ocurrió un error al verificar la clave. Intente nuevamente.");
+            }
+        }
+
+        function aplicarPermisos(accesos) {
+            document.getElementById("tarjeta-activo").classList.remove("bloqueado");
+            document.getElementById("tarjeta-granjita").classList.remove("bloqueado");
+            document.getElementById("tarjeta-guacharo").classList.remove("bloqueado");
+
+            if (!accesos.includes("activo")) {
+                document.getElementById("tarjeta-activo").classList.add("bloqueado");
+            }
+            if (!accesos.includes("granjita")) {
+                document.getElementById("tarjeta-granjita").classList.add("bloqueado");
+            }
+            if (!accesos.includes("guacharo")) {
+                document.getElementById("tarjeta-guacharo").classList.add("bloqueado");
+            }
+        }
+
+        function bloquearTodo() {
+            document.getElementById("tarjeta-activo").classList.add("bloqueado");
+            document.getElementById("tarjeta-granjita").classList.add("bloqueado");
+            document.getElementById("tarjeta-guacharo").classList.add("bloqueado");
+            
+            // Aseguramos que se muestre el botón de pedir clave
+            document.getElementById("btn-login").style.display = "inline-block";
+            document.getElementById("btn-logout").style.display = "none";
+        }
+
+        // --- NUEVO: Función para limpiar la sesión y bloquear la suite al salir ---
+        function cerrarSesion() {
+            sessionStorage.removeItem('zoolotto_permisos');
+            bloquearTodo();
+            alert("Sesión cerrada correctamente.");
+        }
+    </script>
+
+</body>
+</html>

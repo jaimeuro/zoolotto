@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activo ZooLotto</title>
+    <link rel="shortcut icon" href="img_activo/animalitos.png" type="image/x-icon">
+    <style>
+        body {
+            background-color: #0c131a;
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Bloqueo visual inicial para evitar parpadeos antes de que JS verifique la sesión */
+        .contenido-protegido {
+            display: none;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background-color: #111a24;
+            border-radius: 16px;
+            padding: 35px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            border: 1px solid #1c2836;
+            box-sizing: border-box;
+        }
+
+        h2, h3 {
+            color: #ffb703;
+            margin-bottom: 20px;
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        input {
+            flex: 1;
+            padding: 16px;
+            font-size: 18px;
+            border: 2px solid #ffb703;
+            border-radius: 30px;
+            background-color: #0c131a;
+            color: #fff;
+            padding-left: 25px;
+            outline: none;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);
+        }
+
+        button {
+            background-color: #e65f00;
+            color: white;
+            border: none;
+            padding: 0 35px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(230, 95, 0, 0.3);
+            transition: all 0.2s ease;
+        }
+
+        button:hover {
+            background-color: #ffb703;
+            color: #0c131a;
+            transform: translateY(-1px);
+        }
+
+        .grid-resultados {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        @media (max-width: 930px) {
+            .grid-resultados {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 14px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .grid-resultados {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+            
+            .tarjeta-animal img {
+                width: 65px;
+                height: 65px;
+            }
+        }
+
+        .tarjeta-animal {
+            background-color: #16222f;
+            border: 2px solid #2a9d8f; 
+            border-radius: 16px;
+            padding: 15px 10px;
+            text-align: center;
+            box-shadow: 0 0 12px rgba(42, 157, 143, 0.3);
+            transition: transform 0.2s;
+        }
+
+        .tarjeta-animal:hover {
+            transform: scale(1.03);
+        }
+
+        .tarjeta-animal img {
+            width: 85px;
+            height: 85px;
+            object-fit: contain;
+            margin-bottom: 12px;
+            border-radius: 50%;
+            background-color: #0c131a;
+            padding: 5px;
+            border: 1px solid #283747;
+        }
+
+        .tarjeta-animal .nombre {
+            font-size: 13px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #e2e8f0;
+            margin-bottom: 8px;
+        }
+
+        .tarjeta-animal .numero {
+            font-size: 18px;
+            font-weight: bold;
+            color: #ffb703;
+            background-color: #0c131a;
+            border-radius: 20px;
+            padding: 3px 14px;
+            display: inline-block;
+        }
+
+        .tarjeta-animal .coincidencias {
+            font-size: 11px;
+            color: #8a99a8;
+            margin-top: 8px;
+        }
+
+        .vacio {
+            color: #64748b;
+            font-style: italic;
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .seccion-tripletas {
+            width: 100%;
+            max-width: 900px;
+            margin-top: 30px;
+            border-top: 1px solid #1c2836;
+            padding-top: 25px;
+            box-sizing: border-box;
+        }
+
+        .grid-tripletas {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 15px;
+        }
+
+        .tarjeta-tripleta {
+            background-color: #111a24;
+            border: 2px solid #1c2836;
+            border-radius: 14px;
+            padding: 16px;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+        }
+
+        .tarjeta-tripleta:hover {
+            border-color: #ffb703;
+            transform: translateY(-2px);
+        }
+
+        .trip-tag {
+            font-size: 10px;
+            color: #8a99a8;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .trip-valores {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            background-color: #0c131a;
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid #1c2836;
+            margin-bottom: 10px;
+        }
+
+        .trip-num {
+            font-size: 20px;
+            font-weight: 900;
+            color: #ffffff;
+        }
+
+        .trip-separador {
+            font-size: 14px;
+            color: #4a5568;
+        }
+
+        .trip-nombres {
+            font-size: 11px;
+            color: #ffb703;
+            font-weight: bold;
+            text-transform: uppercase;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    </style>
+    <script src="datos_activo.js"></script>
+    
+    <!-- SCRIPT DE CONTROL DE ACCESO ANTES DE CARGAR LA PÁGINA -->
+    <script>
+        (function() {
+            const permisosGuardados = sessionStorage.getItem('zoolotto_permisos');
+            // Si no hay permisos guardados, o si los hay pero NO incluyen "activo"
+            if (!permisosGuardados || !permisosGuardados.split(',').map(p => p.trim()).includes('activo')) {
+                alert("Acceso denegado. No tiene permisos para este módulo.");
+                window.location.href = "index.html";
+            }
+        })();
+    </script>
+</head>
+<body>
+
+<!-- Envolvemos todo el contenido en un contenedor que se muestra solo si pasa el filtro -->
+<div class="contenido-protegido" id="moduloContenido">
+    <a href="index.html" style="color: #8ab4f8; text-decoration: none; font-size: 14px; position: absolute; top: 20px; left: 20px;">
+        ← Volver a la Suite
+    </a>
+    
+    <div class="container" style="margin-top: 40px;">
+        <h2>🌱 Ingrese el número:</h2>
+        <div class="input-group">
+            <!-- Escucha la tecla Enter para procesar sin dar clic obligatoriamente -->
+            <input type="text" id="inputNumero" placeholder="Escriba el número aquí (Ej: 29, 0 o 00)..." onkeypress="if(event.key === 'Enter') procesarPronostico()">
+            <button onclick="procesarPronostico()">▶ Generar Pronósticos</button>
+        </div>
+
+        <hr style="border: 0; height: 1px; background: #1c2836; margin: 35px 0;">
+
+        <h2>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle; margin-right: 8px;">
+                <path d="M4 20H20" stroke="#febb12" stroke-width="2.5" stroke-linecap="round"/>
+                <path d="M4 20V4" stroke="#febb12" stroke-width="2.5" stroke-linecap="round"/>
+                <path d="M7 14L11 10L15 13L20 7" stroke="#febb12" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>Pronósticos Generados:
+        </h2>
+        <div id="contenedorResultados" class="grid-resultados">
+            <p class="vacio">Ingrese un número para calcular las secuencias comunes en sus días.</p>
+        </div>
+    </div>
+
+    <div class="seccion-tripletas">
+        <h2>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle; margin-right: 8px;">
+                <path d="M10 3L11.5 7.5L16 9L11.5 10.5L10 15L8.5 10.5L4 9L8.5 7.5L10 3Z" fill="#febb12"/>
+                <path d="M17 13L18 16L21 17L18 18L17 21L16 18L13 17L16 16L17 13Z" fill="#febb12"/>
+            </svg>Tripletas Más Probables Sugeridas:
+        </h2>
+        <div id="container-tripletas" class="grid-tripletas"></div>
+    </div>
+</div>
+
+<script>
+// Una vez que el DOM está listo, si pasó el control del HEAD, hacemos visible el módulo
+document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById('moduloContenido').style.display = 'flex';
+});
+
+function procesarPronostico() {
+    const numeroBuscado = document.getElementById('inputNumero').value.trim();
+    const contenedor = document.getElementById('contenedorResultados');
+    
+    if (numeroBuscado === "") {
+        alert("Por favor, introduce un número.");
+        return;
+    }
+
+    const diasConSuerte = historialExcel
+        .filter(sorteo => sorteo.numero.toString() === numeroBuscado)
+        .map(sorteo => sorteo.fecha);
+
+    if (diasConSuerte.length === 0) {
+        contenedor.innerHTML = `<p class="vacio">No hay registros del número "${numeroBuscado}" en este historial.</p>`;
+        document.getElementById('container-tripletas').innerHTML = ''; 
+        return;
+    }
+
+    const todosLosAcompanantes = historialExcel.filter(sorteo => diasConSuerte.includes(sorteo.fecha));
+
+    const conteo = {};
+    todosLosAcompanantes.forEach(sorteo => {
+        const numSorteoStr = sorteo.numero.toString();
+        if (numSorteoStr !== numeroBuscado) {
+            if (!conteo[numSorteoStr]) {
+                conteo[numSorteoStr] = { nombre: sorteo.animal, veces: 0 };
+            }
+            conteo[numSorteoStr].veces += 1;
+        }
+    });
+
+    const ordenados = Object.keys(conteo).map(num => ({
+        numero: num, 
+        nombre: conteo[num].nombre,
+        veces: conteo[num].veces
+    })).sort((a, b) => b.veces - a.veces);
+
+    contenedor.innerHTML = ""; 
+    
+    if (ordenados.length === 0) {
+        contenedor.innerHTML = `<p class="vacio">El número salió solo y no tuvo otros acompañantes en esos días.</p>`;
+        document.getElementById('container-tripletas').innerHTML = '';
+        return;
+    }
+
+    const top6Animales = ordenados.slice(0, 6);
+
+    top6Animales.forEach(item => {
+        contenedor.innerHTML += `
+            <div class="tarjeta-animal">
+                <img src="img_activo/${item.numero}.png" alt="${item.nombre}" onerror="this.src='https://placehold.co/85x85/0c131a/ffffff?text=${item.numero}'">
+                <div class="nombre">${item.nombre}</div>
+                <div class="numero">${item.numero}</div>
+                <div class="coincidencias">Coincidió: ${item.veces} ${item.veces === 1 ? 'vez' : 'veces'}</div>
+            </div>
+        `;
+    });
+
+    generarYMostrarTripletas(top6Animales);
+    document.getElementById('container-tripletas').scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function generarYMostrarTripletas(animalesGenerados) {
+    const container = document.getElementById('container-tripletas');
+    if (!container) return; 
+    container.innerHTML = ''; 
+
+    if (!animalesGenerados || animalesGenerados.length < 6) return; 
+
+    const formulasTripletas = [
+        [0, 1, 2], 
+        [0, 3, 4], 
+        [1, 2, 5], 
+        [0, 4, 5]  
+    ];
+
+    formulasTripletas.forEach((indices, index) => {
+        if (!animalesGenerados[indices[0]] || !animalesGenerados[indices[1]] || !animalesGenerados[indices[2]]) return;
+        
+        const trip = indices.map(i => animalesGenerados[i]);
+
+        const tarjetaTripleta = document.createElement('div');
+        tarjetaTripleta.className = "tarjeta-tripleta";
+
+        tarjetaTripleta.innerHTML = `
+            <div class="trip-tag">Sugerencia #${index + 1}</div>
+            <div class="trip-valores">
+                <span class="trip-num">${trip[0].numero}</span>
+                <span class="trip-separador">-</span>
+                <span class="trip-num">${trip[1].numero}</span>
+                <span class="trip-separador">-</span>
+                <span class="trip-num">${trip[2].numero}</span>
+            </div>
+            <div class="trip-nombres" title="${trip[0].nombre} • ${trip[1].nombre} • ${trip[2].nombre}">
+                ${trip[0].nombre} • ${trip[1].nombre} • ${trip[2].nombre}
+            </div>
+        `;
+        container.appendChild(tarjetaTripleta);
+    });
+}
+</script>
+
+</body>
+</html>
