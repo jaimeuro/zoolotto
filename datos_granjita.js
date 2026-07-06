@@ -732,5 +732,17 @@ const historialExcel = [
  { fecha: "2026-07-04", numero: "31", animal: "LAPA" },
  { fecha: "2026-07-04", numero: "35", animal: "JIRAFA" },
  { fecha: "2026-07-04", numero: "07", animal: "PERICO" },
+ { fecha: "2026-07-05", numero: "06", animal: "RANA" },
+ { fecha: "2026-07-05", numero: "07", animal: "PERICO" },
+ { fecha: "2026-07-05", numero: "10", animal: "TIGRE" },
+ { fecha: "2026-07-05", numero: "20", animal: "COCHINO" },
+ { fecha: "2026-07-05", numero: "11", animal: "GATO" },
+ { fecha: "2026-07-05", numero: "18", animal: "BURRO" },
+ { fecha: "2026-07-05", numero: "33", animal: "PESCADO" },
+ { fecha: "2026-07-05", numero: "21", animal: "GALLO" },
+ { fecha: "2026-07-05", numero: "31", animal: "LAPA" },
+ { fecha: "2026-07-05", numero: "07", animal: "PERICO" },
+ { fecha: "2026-07-05", numero: "17", animal: "PAVO" },
+ { fecha: "2026-07-05", numero: "32", animal: "ARDILLA" },
 
 ];
